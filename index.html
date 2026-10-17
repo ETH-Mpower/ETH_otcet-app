@@ -148,7 +148,7 @@
     </form>
 
     <script>
-        function sendReport() {
+                function submitReport() {
             const report = {
                 brigadir: document.getElementById('brigadir').value,
                 brigada: document.getElementById('brigada').value || "Основная",
@@ -159,5 +159,31 @@
                 workers: [],
                 materials: []
             };
+
+            document.querySelectorAll('.worker-block').forEach(block => {
+                const name = block.querySelector('.worker-select').value;
+                const start = block.querySelector('.time-start').value;
+                const end = block.querySelector('.time-end').value;
+                const hours = calculateHours(start, end);
+                report.workers.push({ name: name, hours: hours });
+            });
+
+            document.querySelectorAll('.mat-row').forEach(row => {
+                const name = row.querySelector('.m-name').value;
+                const qty = parseFloat(row.querySelector('.m-qty').value);
+                if (name && qty > 0) {
+                    report.materials.push({ name: name, qty: qty });
+                }
+            });
+
+            // ОФИЦИАЛЬНАЯ ОТПРАВКА В ЧАТ БОТА ТЕЛЕГРАМ
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.sendData(JSON.stringify(report));
+                window.Telegram.WebApp.close();
+            } else {
+                alert("Ошибка: Открывайте форму строго внутри Telegram-бота!");
+            }
+        }
+
 
             // Собираем работников
