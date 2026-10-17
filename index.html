@@ -3,33 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Учет ВЛ - Беглер Йолы (Новая база)</title>
+    <title>Учет ВЛ - Беглер Йолы</title>
     <script src="https://telegram.org"></script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 15px; user-select: none; }
-        .card { background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        h3 { margin-top: 0; color: #1f497d; border-bottom: 2px solid #1f497d; padding-bottom: 5px; font-size: 16px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; color: #555; }
-        select, input, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; margin-bottom: 10px; background-color: #fff; }
-        .worker-container-block, .mat-row { border-left: 3px solid #1f497d; padding-left: 10px; margin-bottom: 15px; }
-        .worker-row-box { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-        .worker-row-box select { flex: 2; margin: 0; }
-        .worker-row-box input { flex: 1; margin: 0; text-align: center; }
-        button { background-color: #1f497d; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; transition: background 0.2s; }
-        button:active { background-color: #112d52; }
-        button.add-btn { background-color: #28a745; margin-top: 5px; padding: 8px; font-size: 14px; margin-bottom: 15px; }
-        button.add-btn:active { background-color: #1e7e34; }
-        button.del-btn { background-color: #dc3545; padding: 12px; width: auto; font-size: 14px; margin-bottom: 10px; }
-        .offline-badge { background-color: #ff9800; color: white; text-align: center; padding: 8px; border-radius: 6px; font-weight: bold; font-size: 13px; margin-bottom: 15px; display: none; }
+        :root {
+            --primary-color: #1F497D; 
+            --bg-color: #F2F4F7;
+            --card-bg: #FFFFFF;
+            --text-color: #333333;
+            --border-color: #D9D9D9;
+            --success-color: #2E7D32;
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            margin: 0; 
+            padding: 12px; 
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .card { 
+            background: var(--card-bg); 
+            padding: 16px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08); 
+            margin-bottom: 12px; 
+            border-top: 4px solid var(--primary-color);
+        }
+        h3 { 
+            margin-top: 0; 
+            color: var(--primary-color); 
+            font-size: 16px; 
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        label { 
+            display: block; 
+            font-weight: 600; 
+            margin-bottom: 4px; 
+            font-size: 13px; 
+            color: #4A5568; 
+        }
+        .sub-label {
+            font-size: 12px;
+            color: #718096;
+            font-weight: 500;
+            margin-bottom: 4px;
+            background: #E2E8F0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        select, input, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            font-size: 15px; 
+            margin-bottom: 12px; 
+            background-color: #FFF;
+            color: var(--text-color);
+        }
+        .worker-block { 
+            background: #F8FAFC;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-color); 
+            padding: 14px; 
+            border-radius: 6px;
+            margin-bottom: 12px; 
+        }
+        .time-group {
+            background: #EDF2F7;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        .time-row { 
+            display: flex; 
+            gap: 10px; 
+        }
+        .time-field { flex: 1; }
+        .time-field input { margin-bottom: 0; padding: 8px; }
+        
+        .mat-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .mat-row select { flex: 2; margin-bottom: 0; }
+        .mat-row input { flex: 1; margin-bottom: 0; text-align: center; }
+
+        button { 
+            background-color: var(--primary-color); 
+            color: white; 
+            border: none; 
+            padding: 14px; 
+            border-radius: 6px; 
+            font-size: 15px; 
+            font-weight: bold; 
+            width: 100%; 
+            cursor: pointer; 
+        }
+        button:active { background-color: #153358; }
+        button.add-btn { background-color: #475569; margin-top: 4px; padding: 10px; font-size: 13px; }
+        button.del-btn { 
+            background-color: #DC2626; 
+            padding: 6px 12px; 
+            width: auto; 
+            font-size: 12px; 
+            margin-top: 8px;
+            float: right;
+        }
+        .clearfix::after { content: ""; clear: both; display: table; }
+        .offline-badge { 
+            background-color: #D97706; 
+            color: white; 
+            text-align: center; 
+            padding: 10px; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            font-size: 13px; 
+            margin-bottom: 12px; 
+            display: none; 
+        }
     </style>
 </head>
 <body>
 
-    <div id="offline-status" class="offline-badge">⚠️ РЕЖИМ ПУСТЫНИ (ОФЛАЙН): Рапорт сохранится в памяти телефона</div>
+    <div id="offline-status" class="offline-badge">⚠️ РЕЖИМ ПУСТЫНИ (ОФЛАЙН): Данные защищены в памяти устройства</div>
 
     <div class="card">
-        <h3>1. Основная информация о выезде</h3>
-        <label>Бригадир (Вы):</label>
+        <h3>1. Выездной рапорт</h3>
+        <label>Бригадир:</label>
         <select id="brigadir">
             <option value="Эмир">Эмир</option>
             <option value="Курбан">Курбан</option>
@@ -38,17 +147,17 @@
         </select>
 
         <label>Название бригады:</label>
-        <input type="text" id="brigada" placeholder="Например: Эмир или Бригада №1">
+        <input type="text" id="brigada" placeholder="Введите название бригады">
 
-        <label>Выберите объект / адрес выезда:</label>
+        <label>Объект / Адрес выезда:</label>
         <select id="object">
             <option value="110кВ ВЛ &quot;Йигит&quot;">110кВ ВЛ "Йигит"</option>
             <option value="35кВ Вл &quot;Йигит&quot;">35кВ Вл "Йигит"</option>
             <option value="Гоктепе &quot;Беглер Йол&quot;">Гоктепе "Беглер Йол"</option>
         </select>
 
-        <label>Ежедневное описание выполненных работ (детально):</label>
-        <textarea id="description" rows="3" placeholder="Протяжка ВЛ, монтаж лотков, ошиновка..."></textarea>
+        <label>Описание выполненных работ:</label>
+        <textarea id="description" rows="3" placeholder="Опишите, что конкретно сделано..."></textarea>
         
         <label>Статус объекта:</label>
         <select id="status">
@@ -58,72 +167,86 @@
         </select>
         
         <label>Комментарий / Проблемы:</label>
-        <input type="text" id="comment" placeholder="Если есть проблемы, укажите тут">
+        <input type="text" id="comment" placeholder="Жалобы или примечания (если есть)">
     </div>
 
     <div class="card">
-        <h3>2. Состав работников бригады и часы</h3>
+        <h3>2. Персонал и раздельный учёт времени</h3>
         <div id="workers-container">
-            <div class="worker-container-block">
-                <div class="worker-row-box">
-                    <select class="worker-select">
-                        <option value="Агамырадов Агамырат">Агамырадов Агамырат (Пом. маляра)</option>
-                        <option value="Агамырадов Сердармырат">Агамырадов Сердармырат (Пом. маляра)</option>
-                        <option value="Аннадурдыев Бакы">Аннадурдыев Бакы (Электромонтер)</option>
-                        <option value="Аннаев Ысмайыл">Аннаев Ысмайыл (Электромонтер)</option>
-                        <option value="Аrazмедов Аразмат">Аразмедов Аразмат (Электромонтер)</option>
-                        <option value="Арджиков Бегенч">Аrdжиков Бегенч (Пом. маляра)</option>
-                        <option value="Атаев Сохбет">Атаев Сохбет (Мастер электрик)</option>
-                        <option value="Атаев Чарымырад">Атаев Чарымырад (Электромонтер)</option>
-                        <option value="Аширов Мурад">Аширов Мурад (Водитель OPEL)</option>
-                        <option value="Аширов Ягшимурад">Аширов Ягшимурад (Электромонтер)</option>
-                        <option value="Байрамов Баллы">Байрамов Баллы (Электромонтер)</option>
-                        <option value="Байханов Сердар">Байханов Сердар (Вод-ль манипулятора)</option>
-                        <option value="Баллыев Шамухамет">Баллыев Шамухамет (Пом. сварщика)</option>
-                        <option value="Вергун Антон">Вергун Антон (Электромонтер)</option>
-                        <option value="Газаков Оразмурад">Газаков Оразмурад (Пом. лазерщика)</option>
-                        <option value="Гуйванюк Алексей">Гуйванюк Алексей (Электромонтер)</option>
-                        <option value="Гурбанназаров Сапаргулы">Гурбанназаров Сапаргулы (Сварщик)</option>
-                        <option value="Гурбанназаров Сохбет">Гурбанназаров Сохбет (Сварщик)</option>
-                        <option value="Гусейнов Юсуп">Гусейнов Юсуп (Пом. маляра)</option>
-                        <option value="Джораев Атамурад">Джораев Атамурад (Сварщик)</option>
-                        <option value="Джумаев Шохрат">Джумаев Шохрат (Электромонтер)</option>
-                        <option value="Джуманиязов Бяшим">Джуманиязов Бяшим (Электромонтер)</option>
-                        <option value="Дурдыев Джумадурды">Дурдыев Джумадурды (Водитель УАЗ)</option>
-                        <option value="Егенбаев Алланур">Егенбаев Алланур (Лазерщик)</option>
-                        <option value="Золотарёв Владимир">Золотарёв Владимир (Электромонтер)</option>
-                        <option value="Ивкин Султан">Ивкин Султан (Сварщик)</option>
-                        <option value="Ильгельдыев Мердан">Ильгельдыев Мердан (Электромонтер)</option>
-                        <option value="Каграманов Рамис">Каграманов Рамиis (Электромонтер)</option>
-                        <option value="Керимов Оремырат">Керимов Оремырат (Пом. лазерщика)</option>
-                        <option value="Керков Аннаораз">Керков Аннаораз (Электромонтер)</option>
-                        <option value="Кивгазов Виктор">Кивгазов Виктор (Сварщик)</option>
-                        <option value="Кивгазов Юрий">Кивгазов Юрий (Маляр)</option>
-                        <option value="Костриков Валентин">Костриков Валентин (Сварщик)</option>
-                        <option value="Курбанов Курбан">Курбанов Курбан (Электромонтер)</option>
-                        <option value="Левенков Александр">Левенков Александр (Электромонтер)</option>
-                        <option value="Магомедов Рамазан">Магомедов Рамазан (Лазерщик)</option>
-                        <option value="Магтумов Акмырат">Магтумов Акмырат (Электромонтер)</option>
-                        <option value="Медведев Григорий">Медведев Григорий (Электромонтер)</option>
-                        <option value="Мухаммедов Аман">Мухаммедов Аман (Электромонтер)</option>
-                        <option value="Мухамметгулыев Перман">Мухамметгулыев Перман (Электромонтер)</option>
-                        <option value="Назаров Назар">Назаров Назар (Электромонтер)</option>
-                        <option value="Нарзуллаев Арслан">Нарзуллаев Арслан (Сварщик)</option>
-                        <option value="Нурмамедов Абзал">Нурмамедов Абзал (Электромонтер)</option>
-                        <option value="Нурмамедов Сахы">Нурмамедов Сахы (Электромонтер)</option>
-                        <option value="Нурсахатов Мерген">Нурсахатов Мерген (Электромонтер)</option>
-                        <option value="Овезов Бердымухаммет">Овезов Бердымухаммет (Пом. электромонтера)</option>
-                        <option value="Одебаев Дурдымурат">Одебаев Дурдымурат (Лазерщик)</option>
-                        <option value="Омадов Ахмет">Омадов Ахмет (Сварщик)</option>
-                        <option value="Оразов Исгендер">Оразов Исгендер (Сварщик)</option>
-                        <option value="Оразов Эльдар (Довран)">Оразов Эльдар (Довран) (Электромонтер)</option>
-                        <option value="Палтаев Хангельды">Палтаев Хангельды (Электромонтер)</option>
-                        <option value="Пашиев Полат">Пашиев Полат (Электромонтер)</option>
-                        <option value="Рожков Геннадий">Рожков Геннадий (Сварщик)</option>
-                        <option value="Самсонкин Георгий">Самсонкин Георгий (Пом. маляра)</option>
-                        <option value="Сергачев Роман">Сергачев Роман (Сварщик)</option>
-                        <option value="Скребцов Алексей">Скребцов Алексей (Электромонтер)</option>
-                        <option value="Сопыев Сатдурды">Сопыев Сатдурды (Электромонтер)</option>
-                        <option value="Сувханов Джепбар">Сувханов Джепбар (Электромонтер)</option>
-                        <option value="Сувханов Осман">Сувханов Осман (Сварщик)</option>
-                        <option value="Тавлеев Андрей">Тавлеев Андрей (Электромонтер)</option>
+            <div class="worker-block clearfix">
+                <label>Сотрудник:</label>
+                <select class="worker-select">
+                    <option value="Агамырадов Агамырат">Агамырадов Агамырат (Пом. маляра)</option>
+                    <option value="Агамырадов Сердармырат">Агамырадов Сердармырат (Пом. маляра)</option>
+                    <option value="Аннадурдыев Бакы">Аннадурдыев Бакы (Электромонтер)</option>
+                    <option value="Аннаев Ысмайыл">Аннаев Ысмайыл (Электромонтер)</option>
+                    <option value="Аразмедов Аразмат">Аразмедов Аразмат (Электромонтер)</option>
+                    <option value="Арджиков Бегенч">Арджиков Бегенч (Пом. маляра)</option>
+                    <option value="Атаев Сохбет">Атаев Сохбет (Мастер электрик)</option>
+                    <option value="Атаев Чарымырад">Атаев Чарымырад (Электромонтер)</option>
+                    <option value="Аширов Мурад">Аширов Мурад (Водитель OPEL)</option>
+                    <option value="Аширов Ягшимурад">Аширов Ягшимурад (Электромонтер)</option>
+                    <option value="Байрамов Баллы">Байрамов Баллы (Электромонтер)</option>
+                    <option value="Байханов Сердар">Байханов Сердар (Вод-ль манипулятора)</option>
+                    <option value="Баллыев Шамухамет">Баллыев Шамухамет (Пом. сварщика)</option>
+                    <option value="Вергун Антон">Вергун Антон (Электромонтер)</option>
+                    <option value="Черкезов Дортгулы">Черкезов Дортгулы (Электромонтер)</option>
+                    <option value="Черкезов Мейлис">Черкезов Мейлис (Электромонтер)</option>
+                </select>
+
+                <!-- Время на ВЛ / Выезде -->
+                <div class="time-group">
+                    <div class="sub-label">1. РАБОТА НА ВЛ (В ПУСТЫНЕ)</div>
+                    <div class="time-row">
+                        <div class="time-field">
+                            <label>Начало:</label>
+                            <input type="time" class="time-vl-start" value="08:00">
+                        </div>
+                        <div class="time-field">
+                            <label>Конец:</label>
+                            <input type="time" class="time-vl-end" value="14:00">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Время на Базе -->
+                <div class="time-group">
+                    <div class="sub-label">2. РАБОТА НА БАЗЕ (ПОСЛЕ 14:00)</div>
+                    <div class="time-row">
+                        <div class="time-field">
+                            <label>Начало:</label>
+                            <input type="time" class="time-base-start" value="14:00">
+                        </div>
+                        <div class="time-field">
+                            <label>Конец:</label>
+                            <input type="time" class="time-base-end" value="18:00">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="add-btn" onclick="addWorkerRow()">+ Добавить сотрудника</button>
+    </div>
+
+    <div class="card">
+        <h3>3. Расход материалов</h3>
+        <div id="materials-container"></div>
+        <button class="add-btn" onclick="addMaterialRow()">+ Списать материал</button>
+    </div>
+
+    <button style="background-color: var(--success-color); font-size: 17px; margin-top: 10px;" onclick="submitReport()">🚀 ОТПРАВИТЬ РАПОРТ</button>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function updateOnlineStatus() {
+            document.getElementById('offline-status').style.display = navigator.onLine ? 'none' : 'block';
+        }
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+
+        function addWorkerRow() {
+            const container = document.getElementById('workers-container');
+            const firstBlock = container.querySelector('.worker-block');
