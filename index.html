@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Учет ВЛ</title>
-    <!-- Подключение библиотеки Telegram WebApp -->
+    <title>Учет работ на объекте ВЛ</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root { --primary-color: #1F497D; --bg-color: #F2F4F7; --card-bg: #FFFFFF; --text-color: #333333; --border-color: #D9D9D9; --success-color: #2E7D32; }
@@ -43,7 +42,7 @@
             <select id="object">
                 <option value="110кВ ВЛ 'Йигит'">110кВ ВЛ "Йигит"</option>
                 <option value="35кВ Вл 'Йигит'">35кВ Вл "Йигит"</option>
-                <option value="Гоктепе 'Беглер Йол'">Гоктепе "Беглер Йол"</option>
+                <option value="Объект Гоктепе">Объект Гоктепе</option>
             </select>
 
             <label>Описание выполненных работ:</label>
@@ -80,25 +79,6 @@
                         <div class="time-box"><label>Конец:</label><input type="time" class="w-end" value="18:00"></div>
                     </div>
                 </div>
-
-                <div class="worker-row">
-                    <select class="w-name">
-                        <option value="">-- Выберите сотрудника --</option>
-                        <option value="Агамырадов Агамырат">Агамырадов Агамырат</option>
-                        <option value="Агамырадов Сердармырат">Агамырадов Сердармырат</option>
-                        <option value="Аннадурдыев Бакы">Аннадурдыев Бакы</option>
-                        <option value="Аннаев Ысмайыл">Аннаев Ысмайыл</option>
-                        <option value="Аразмедов Аразмат">Аразмедов Аразмат</option>
-                        <option value="Арджиков Бегенч">Арджиков Бегенч</option>
-                        <option value="Атаев Сохбет">Атаев Сохбет</option>
-                        <option value="Атаев Чарымырад">Атаев Чарымырад</option>
-                        <option value="Черкезов Мейлис">Черкезов Мейлис</option>
-                    </select>
-                    <div class="time-container">
-                        <div class="time-box"><label>Начало:</label><input type="time" class="w-start" value="08:00"></div>
-                        <div class="time-box"><label>Конец:</label><input type="time" class="w-end" value="18:00"></div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -117,14 +97,12 @@
             </div>
         </div>
 
-        <button type="button" class="main-btn" onclick="sendReport()">🚀 ОТПРАВИТЬ РАПОРТ</button>
+        <button type="button" class="main-btn" onclick="sendReport()">🚀 ОТПРАВИТЬ ОТЧЕТ</button>
     </form>
 
     <script>
-        // Инициализация Telegram WebApp
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.expand();
-        }
+        let tg = window.Telegram.WebApp;
+        tg.expand();
 
         function calculateHours(start, end) {
             if (!start || !end) return "0 ч";
@@ -138,42 +116,45 @@
         }
 
         function sendReport() {
-            const report = {
-                brigadir: document.getElementById('brigadir').value,
-                brigada: document.getElementById('brigada').value || "Основная",
-                object: document.getElementById('object').value,
-                description: document.getElementById('description').value,
-                status: document.getElementById('status').value,
-                comment: document.getElementById('comment').value || "Нет",
-                workers: [],
-                materials: []
-            };
+            try {
+                const report = {
+                    brigadir: document.getElementById('brigadir').value,
+                    brigada: document.getElementById('brigada').value || "Основная",
+                    object: document.getElementById('object').value,
+                    description: document.getElementById('description').value,
+                    status: document.getElementById('status').value,
+                    comment: document.getElementById('comment').value || "Нет",
+                    workers: [],
+                    materials: []
+                };
 
-            document.querySelectorAll('.worker-row').forEach(row => {
-                const name = row.querySelector('.w-name').value;
-                if (name) {
-                    const start = row.querySelector('.w-start').value;
-                    const end = row.querySelector('.w-end').value;
-                    const hours = calculateHours(start, end);
-                    report.workers.push({ name: name, hours: hours, start: start, end: end });
+                document.querySelectorAll('.worker-row').forEach(row => {
+                    const name = row.querySelector('.w-name').value;
+                    if (name) {
+                        const start = row.querySelector('.w-start').value;
+                        const end = row.querySelector('.w-end').value;
+                        const hours = calculateHours(start, end);
+                        report.workers.push({ name: name, hours: hours, start: start, end: end });
+                    }
+                });
+
+                document.querySelectorAll('.mat-row').forEach(row => {
+                    const name = row.querySelector('.m-name').value;
+                    const qty = parseFloat(row.querySelector('.m-qty').value);
+                    if (name && qty > 0) {
+                        report.materials.push({ name: name, qty: qty });
+                    }
+                });
+
+                const jsonData = JSON.stringify(report);
+
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.sendData) {
+                    window.Telegram.WebApp.sendData(jsonData);
+                } else {
+                    alert("Ошибка: Telegram WebApp недоступен.");
                 }
-            });
-
-            document.querySelectorAll('.mat-row').forEach(row => {
-                const name = row.querySelector('.m-name').value;
-                const qty = parseFloat(row.querySelector('.m-qty').value);
-                if (name && qty > 0) {
-                    report.materials.push({ name: name, qty: qty });
-                }
-            });
-
-            // Отправка данных боту
-            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.sendData) {
-                window.Telegram.WebApp.sendData(JSON.stringify(report));
-                window.Telegram.WebApp.close();
-            } else {
-                alert("Данные собраны! Если вы видите это окно, значит открыли форму вне Telegram.");
-                console.log(JSON.stringify(report, null, 2));
+            } catch (err) {
+                alert("Ошибка в скрипте: " + err.message);
             }
         }
     </script>
