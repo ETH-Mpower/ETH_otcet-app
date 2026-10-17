@@ -167,7 +167,7 @@
                     <option value="Аннаев Ысмайыл">Аннаев Ысмайыл (Электромонтер)</option>
                     <option value="Аразмедов Аразмат">Аразмедов Аразмат (Электромонтер)</option>
                     <option value="Арджиков Бегенч">Арджиков Бегенч (Пом. маляра)</option>
-                    <option value="Атаев Сохбет">Атаев Сохбет (Мастер электрик)</option>
+                    <option value="Атаев Сохбет">Аtaev Сохбет (Мастер электрик)</option>
                     <option value="Атаев Чарымырад">Атаев Чарымырад (Электромонтер)</option>
                     <option value="Аширов Мурад">Аширов Мурад (Водитель OPEL)</option>
                     <option value="Аширов Ягшимурад">Аширов Ягшимурад (Электромонтер)</option>
@@ -218,13 +218,16 @@
             const firstBlock = container.querySelector('.worker-block');
             const newBlock = firstBlock.cloneNode(true);
             
-            if (!newBlock.querySelector('.del-btn')) {
-                const delBtn = document.createElement('button');
-                delBtn.className = 'del-btn';
-                delBtn.innerText = '✕ Удалить';
-                delBtn.onclick = function() { newBlock.remove(); };
-                newBlock.appendChild(delBtn);
-            }
+            const delBtn = newBlock.querySelector('.del-btn');
+            if (delBtn) delBtn.remove();
+            
+            const btn = document.createElement('button');
+            btn.className = 'del-btn';
+            btn.innerText = '✕ Удалить';
+            btn.type = 'button';
+            btn.onclick = function() { newBlock.remove(); };
+            newBlock.appendChild(btn);
+            
             container.appendChild(newBlock);
         }
 
@@ -241,6 +244,3 @@
                 </select>
                 <input type="number" class="mat-qty" placeholder="Кол-во" required>
             `;
-            container.appendChild(row);
-        }
-
