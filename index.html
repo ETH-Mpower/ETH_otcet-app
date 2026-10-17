@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Учет ВЛ - Беглер Йолы</title>
+    <!-- Официальный скрипт Telegram Web App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root { --primary-color: #1F497D; --bg-color: #F2F4F7; --card-bg: #FFFFFF; --text-color: #333333; --border-color: #D9D9D9; --success-color: #2E7D32; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 12px; }
@@ -11,11 +13,11 @@
         h3 { margin-top: 0; color: var(--primary-color); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; }
         label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; color: #4A5568; }
         select, input, textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 15px; margin-bottom: 10px; background-color: #FFF; color: var(--text-color); }
-        .worker-row { background: #F8FAFC; border: 1px solid var(--border-color); border-left: 4px solid var(--primary-color); padding: 10px; border-radius: 6px; margin-bottom: 8px; }
+        .worker-row, .mat-row { background: #F8FAFC; border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; margin-bottom: 8px; }
         .time-container { display: flex; gap: 10px; margin-top: 4px; }
         .time-box { flex: 1; }
         .time-box input { margin-bottom: 0; padding: 6px; }
-        .mat-row { display: flex; gap: 10px; margin-bottom: 6px; background: #F8FAFC; padding: 6px; border-radius: 6px; border: 1px solid var(--border-color); align-items: center; }
+        .mat-row { display: flex; gap: 10px; align-items: center; }
         .mat-row select { flex: 2; margin-bottom: 0; }
         .mat-row input { flex: 1; margin-bottom: 0; text-align: center; }
         .main-btn { background-color: var(--success-color); color: white; border: none; padding: 14px; border-radius: 6px; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; display: block; margin-top: 15px; }
@@ -39,9 +41,9 @@
 
             <label>Объект / Адрес выезда:</label>
             <select id="object">
-                <option value="110кВ ВЛ &quot;Йигит&quot;">110кВ ВЛ "Йигит"</option>
-                <option value="35кВ Вл &quot;Йигит&quot;">35кВ Вл "Йигит"</option>
-                <option value="Гоктепе &quot;Беглер Йол&quot;">Гоктепе "Беглер Йол"</option>
+                <option value="110кВ ВЛ 'Йигит'">110кВ ВЛ "Йигит"</option>
+                <option value="35кВ Вл 'Йигит'">35кВ Вл "Йигит"</option>
+                <option value="Гоктепе 'Беглер Йол'">Гоктепе "Беглер Йол"</option>
             </select>
 
             <label>Описание выполненных работ:</label>
@@ -58,11 +60,11 @@
         </div>
 
         <div class="card">
-            <h3>2. Персонал бригады (Заполните нужные строки)</h3>
+            <h3>2. Персонал бригады</h3>
             <div id="workers-list">
                 <div class="worker-row">
                     <select class="w-name">
-                        <option value="">-- Выберите сотрудника (или оставьте пустым) --</option>
+                        <option value="">-- Выберите сотрудника --</option>
                         <option value="Агамырадов Агамырат">Агамырадов Агамырат (Пом. маляра)</option>
                         <option value="Агамырадов Сердармырат">Агамырадов Сердармырат (Пом. маляра)</option>
                         <option value="Аннадурдыев Бакы">Аннадурдыев Бакы (Электромонтер)</option>
@@ -78,49 +80,11 @@
                         <div class="time-box"><label>Конец:</label><input type="time" class="w-end" value="18:00"></div>
                     </div>
                 </div>
-
-                <div class="worker-row">
-                    <select class="w-name">
-                        <option value="">-- Выберите сотрудника (или оставьте пустым) --</option>
-                        <option value="Агамырадов Агамырат">Агамырадов Агамырат</option>
-                        <option value="Агамырадов Сердармырат">Агамырадов Сердармырат</option>
-                        <option value="Аннадурдыев Бакы">Аннадурдыев Бакы</option>
-                        <option value="Аннаев Ысмайыл">Аннаев Ысмайыл</option>
-                        <option value="Аразмедов Аразмат">Аразмедов Аразмат</option>
-                        <option value="Арджиков Бегенч">Арджиков Бегенч</option>
-                        <option value="Атаев Сохбет">Атаев Сохбет</option>
-                        <option value="Атаев Чарымырад">Атаев Чарымырад</option>
-                        <option value="Черкезов Мейлис">Черкезов Мейлис</option>
-                    </select>
-                    <div class="time-container">
-                        <div class="time-box"><label>Начало:</label><input type="time" class="w-start" value="08:00"></div>
-                        <div class="time-box"><label>Конец:</label><input type="time" class="w-end" value="18:00"></div>
-                    </div>
-                </div>
-
-                <div class="worker-row">
-                    <select class="w-name">
-                        <option value="">-- Выберите сотрудника (или оставьте пустым) --</option>
-                        <option value="Агамырадов Агамырат">Агамырадов Агамырат</option>
-                        <option value="Агамырадов Сердармырат">Агамырадов Сердармырат</option>
-                        <option value="Аннадурдыев Бакы">Аннадурдыев Бакы</option>
-                        <option value="Аннаев Ысмайыл">Аннаев Ысмайыл</option>
-                        <option value="Аразмедов Аразмат">Аразмедов Аразмат</option>
-                        <option value="Арджиков Бегенч">Арджиков Бегенч</option>
-                        <option value="Атаев Сохбет">Атаев Сохбет</option>
-                        <option value="Атаев Чарымырад">Атаев Чарымырад</option>
-                        <option value="Черкезов Мейлис">Черкезов Мейлис</option>
-                    </select>
-                    <div class="time-container">
-                        <div class="time-box"><label>Начало:</label><input type="time" class="w-start" value="08:00"></div>
-                        <div class="time-box"><label>Конец:</label><input type="time" class="w-end" value="18:00"></div>
-                    </div>
-                </div>
             </div>
         </div>
 
         <div class="card">
-            <h3>3. Материалы (Заполните нужные строки)</h3>
+            <h3>3. Материалы</h3>
             <div id="mats-list">
                 <div class="mat-row">
                     <select class="m-name">
@@ -131,29 +95,23 @@
                     </select>
                     <input type="number" class="m-qty" placeholder="Кол-во">
                 </div>
-                <div class="mat-row">
-                    <select class="m-name">
-                        <option value="">-- Выберите материал --</option>
-                        <option value="Траверс Б-4">Траверс Б-4 (шт)</option>
-                        <option value="Кабель ВВГнг-LS 3x2.5">Кабель ВВГнг-LS 3x2.5 (м)</option>
-                        <option value="Гофротруба ПВХ d20">Гофротруба ПВХ d20 (м)</option>
-                    </select>
-                    <input type="number" class="m-qty" placeholder="Кол-во">
-                </div>
             </div>
         </div>
 
-        <!-- Название функции теперь совпадает с кнопкой: sendReport -->
         <button type="button" class="main-btn" onclick="sendReport()">🚀 ОТПРАВИТЬ РАПОРТ</button>
     </form>
 
     <script>
+        // Инициализация Telegram WebApp
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
         function calculateHours(start, end) {
             if (!start || !end) return "0 ч";
             let [sH, sM] = start.split(':').map(Number);
             let [eH, eM] = end.split(':').map(Number);
             let diff = (eH * 60 + eM) - (sH * 60 + sM);
-            if (diff < 0) diff += 24 * 60; // на случай ночной смены
+            if (diff < 0) diff += 24 * 60;
             let hours = Math.floor(diff / 60);
             let mins = diff % 60;
             return mins > 0 ? `${hours} ч ${mins} мин` : `${hours} ч`;
@@ -171,10 +129,9 @@
                 materials: []
             };
 
-            // Исправленные селекторы под верстку (.worker-row, .w-name, .w-start, .w-end)
             document.querySelectorAll('.worker-row').forEach(row => {
                 const name = row.querySelector('.w-name').value;
-                if (name) { // Добавляем только если выбран сотрудник
+                if (name) {
                     const start = row.querySelector('.w-start').value;
                     const end = row.querySelector('.w-end').value;
                     const hours = calculateHours(start, end);
@@ -190,12 +147,14 @@
                 }
             });
 
-            // Отправка данных в Телеграм WebApp
-            if (window.Telegram && window.Telegram.WebApp) {
+            // Проверка: запущено ли приложение в Telegram или в обычном браузере
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
                 window.Telegram.WebApp.sendData(JSON.stringify(report));
                 window.Telegram.WebApp.close();
             } else {
-                alert("Ошибка: Открывайте форму строго внутри Telegram-бота!");
+                // Если тестирование идет на компьютере или в браузере, покажем данные в консоли / алерте, чтобы форма не блокировалась
+                alert("Внимание: Вы тестируете вне Telegram, поэтому данные будут выведены на экран.");
+                console.log(JSON.stringify(report, null, 2));
             }
         }
     </script>
