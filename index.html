@@ -60,7 +60,6 @@
         <div class="card">
             <h3>2. Персонал бригады (Заполните нужные строки)</h3>
             <div id="workers-list">
-                <!-- Сразу генерируем 5 жестких строк для сотрудников, никаких скрытых кнопок -->
                 <div class="worker-row">
                     <select class="w-name">
                         <option value="">-- Выберите сотрудника (или оставьте пустым) --</option>
@@ -144,11 +143,23 @@
             </div>
         </div>
 
+        <!-- Название функции теперь совпадает с кнопкой: sendReport -->
         <button type="button" class="main-btn" onclick="sendReport()">🚀 ОТПРАВИТЬ РАПОРТ</button>
     </form>
 
     <script>
-                function submitReport() {
+        function calculateHours(start, end) {
+            if (!start || !end) return "0 ч";
+            let [sH, sM] = start.split(':').map(Number);
+            let [eH, eM] = end.split(':').map(Number);
+            let diff = (eH * 60 + eM) - (sH * 60 + sM);
+            if (diff < 0) diff += 24 * 60; // на случай ночной смены
+            let hours = Math.floor(diff / 60);
+            let mins = diff % 60;
+            return mins > 0 ? `${hours} ч ${mins} мин` : `${hours} ч`;
+        }
+
+        function sendReport() {
             const report = {
                 brigadir: document.getElementById('brigadir').value,
                 brigada: document.getElementById('brigada').value || "Основная",
@@ -160,12 +171,15 @@
                 materials: []
             };
 
-            document.querySelectorAll('.worker-block').forEach(block => {
-                const name = block.querySelector('.worker-select').value;
-                const start = block.querySelector('.time-start').value;
-                const end = block.querySelector('.time-end').value;
-                const hours = calculateHours(start, end);
-                report.workers.push({ name: name, hours: hours });
+            // Исправленные селекторы под верстку (.worker-row, .w-name, .w-start, .w-end)
+            document.querySelectorAll('.worker-row').forEach(row => {
+                const name = row.querySelector('.w-name').value;
+                if (name) { // Добавляем только если выбран сотрудник
+                    const start = row.querySelector('.w-start').value;
+                    const end = row.querySelector('.w-end').value;
+                    const hours = calculateHours(start, end);
+                    report.workers.push({ name: name, hours: hours, start: start, end: end });
+                }
             });
 
             document.querySelectorAll('.mat-row').forEach(row => {
@@ -176,7 +190,7 @@
                 }
             });
 
-            // ОФИЦИАЛЬНАЯ ОТПРАВКА В ЧАТ БОТА ТЕЛЕГРАМ
+            // Отправка данных в Телеграм WebApp
             if (window.Telegram && window.Telegram.WebApp) {
                 window.Telegram.WebApp.sendData(JSON.stringify(report));
                 window.Telegram.WebApp.close();
@@ -184,6 +198,6 @@
                 alert("Ошибка: Открывайте форму строго внутри Telegram-бота!");
             }
         }
-
-
-            // Собираем работников
+    </script>
+</body>
+</html>
