@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Учет работ на объекте ВЛ</title>
+    <title>Учет работ ВЛ</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root { --primary-color: #1F497D; --bg-color: #F2F4F7; --card-bg: #FFFFFF; --text-color: #333333; --border-color: #D9D9D9; --success-color: #2E7D32; }
@@ -64,15 +64,15 @@
                 <div class="worker-row">
                     <select class="w-name">
                         <option value="">-- Выберите сотрудника --</option>
-                        <option value="Агамырадов Агамырат">Агамырадов Агамырат (Пом. маляра)</option>
-                        <option value="Агамырадов Сердармырат">Агамырадов Сердармырат (Пом. маляра)</option>
-                        <option value="Аннадурдыев Бакы">Аннадурдыев Бакы (Электромонтер)</option>
-                        <option value="Аннаев Ысмайыл">Аннаев Ысмайыл (Электромонтер)</option>
-                        <option value="Аразмедов Аразмат">Аразмедов Аразмат (Электромонтер)</option>
-                        <option value="Арджиков Бегенч">Арджиков Бегенч (Пом. маляра)</option>
-                        <option value="Атаев Сохбет">Атаев Сохбет (Мастер электрик)</option>
-                        <option value="Атаев Чарымырад">Атаев Чарымырад (Электромонтер)</option>
-                        <option value="Черкезов Мейлис">Черкезов Мейлис (Электромонтер)</option>
+                        <option value="Агамырадов Агамырат">Агамырадов Агамырат</option>
+                        <option value="Агамырадов Сердармырат">Агамырадов Сердармырат</option>
+                        <option value="Аннадурдыев Бакы">Аннадурдыев Бакы</option>
+                        <option value="Аннаев Ысмайыл">Аннаев Ысмайыл</option>
+                        <option value="Аразмедов Аразмат">Аразмедов Аразмат</option>
+                        <option value="Арджиков Бегенч">Арджиков Бегенч</option>
+                        <option value="Атаев Сохбет">Атаев Сохбет</option>
+                        <option value="Атаев Чарымырад">Атаев Чарымырад</option>
+                        <option value="Черкезов Мейлис">Черкезов Мейлис</option>
                     </select>
                     <div class="time-container">
                         <div class="time-box"><label>Начало:</label><input type="time" class="w-start" value="08:00"></div>
@@ -97,7 +97,7 @@
             </div>
         </div>
 
-        <button type="button" class="main-btn" onclick="sendReport()">🚀 ОТПРАВИТЬ ОТЧЕТ</button>
+        <button type="button" class="main-btn" onclick="sendReport()">🚀 ОТПРАВИТЬ РАПОРТ</button>
     </form>
 
     <script>
@@ -105,14 +105,13 @@
         tg.expand();
 
         function calculateHours(start, end) {
-            if (!start || !end) return "0 ч";
+            if (!start || !end) return 10;
             let [sH, sM] = start.split(':').map(Number);
             let [eH, eM] = end.split(':').map(Number);
             let diff = (eH * 60 + eM) - (sH * 60 + sM);
             if (diff < 0) diff += 24 * 60;
-            let hours = Math.floor(diff / 60);
-            let mins = diff % 60;
-            return mins > 0 ? `${hours} ч ${mins} мин` : `${hours} ч`;
+            let hours = diff / 60;
+            return parseFloat(hours.toFixed(2));
         }
 
         function sendReport() {
@@ -134,7 +133,7 @@
                         const start = row.querySelector('.w-start').value;
                         const end = row.querySelector('.w-end').value;
                         const hours = calculateHours(start, end);
-                        report.workers.push({ name: name, hours: hours, start: start, end: end });
+                        report.workers.push({ name: name, hours: hours });
                     }
                 });
 
@@ -150,11 +149,12 @@
 
                 if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.sendData) {
                     window.Telegram.WebApp.sendData(jsonData);
+                    window.Telegram.WebApp.close();
                 } else {
-                    alert("Ошибка: Telegram WebApp недоступен.");
+                    alert("Ошибка: Telegram WebApp недоступен. Открыто вне Telegram.");
                 }
             } catch (err) {
-                alert("Ошибка в скрипте: " + err.message);
+                alert("Ошибка скрипта: " + err.message);
             }
         }
     </script>
