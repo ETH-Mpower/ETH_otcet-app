@@ -5,234 +5,150 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Учет ВЛ - Беглер Йолы</title>
     <style>
-        :root {
-            --primary-color: #1F497D; 
-            --bg-color: #F2F4F7;
-            --card-bg: #FFFFFF;
-            --text-color: #333333;
-            --border-color: #D9D9D9;
-            --success-color: #2E7D32;
-        }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
-            margin: 0; 
-            padding: 12px; 
-        }
-        .card { 
-            background: var(--card-bg); 
-            padding: 16px; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08); 
-            margin-bottom: 12px; 
-            border-top: 4px solid var(--primary-color);
-        }
-        h3 { 
-            margin-top: 0; 
-            color: var(--primary-color); 
-            font-size: 16px; 
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-        label { 
-            display: block; 
-            font-weight: 600; 
-            margin-bottom: 4px; 
-            font-size: 13px; 
-            color: #4A5568; 
-        }
-        select, input, textarea { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1px solid var(--border-color); 
-            border-radius: 6px; 
-            box-sizing: border-box; 
-            font-size: 15px; 
-            margin-bottom: 12px; 
-            background-color: #FFF;
-            color: var(--text-color);
-        }
-        .worker-block { 
-            background: #F8FAFC;
-            border: 1px solid var(--border-color);
-            border-left: 4px solid var(--primary-color); 
-            padding: 14px; 
-            border-radius: 6px;
-            margin-bottom: 12px; 
-        }
-        .time-row { 
-            display: flex; 
-            gap: 10px; 
-            margin-top: 8px;
-        }
-        .time-field { flex: 1; }
-        .time-field input { margin-bottom: 0; padding: 8px; }
-        
-        .mat-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 8px;
-            background: #F8FAFC;
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            align-items: center;
-        }
+        :root { --primary-color: #1F497D; --bg-color: #F2F4F7; --card-bg: #FFFFFF; --text-color: #333333; --border-color: #D9D9D9; --success-color: #2E7D32; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 12px; }
+        .card { background: var(--card-bg); padding: 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); margin-bottom: 12px; border-top: 4px solid var(--primary-color); }
+        h3 { margin-top: 0; color: var(--primary-color); font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; }
+        label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; color: #4A5568; }
+        select, input, textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 15px; margin-bottom: 10px; background-color: #FFF; color: var(--text-color); }
+        .worker-row { background: #F8FAFC; border: 1px solid var(--border-color); border-left: 4px solid var(--primary-color); padding: 10px; border-radius: 6px; margin-bottom: 8px; }
+        .time-container { display: flex; gap: 10px; margin-top: 4px; }
+        .time-box { flex: 1; }
+        .time-box input { margin-bottom: 0; padding: 6px; }
+        .mat-row { display: flex; gap: 10px; margin-bottom: 6px; background: #F8FAFC; padding: 6px; border-radius: 6px; border: 1px solid var(--border-color); align-items: center; }
         .mat-row select { flex: 2; margin-bottom: 0; }
         .mat-row input { flex: 1; margin-bottom: 0; text-align: center; }
-
-        /* Обычные стандартные кнопки без привязки к Telegram API */
-        .main-btn { 
-            background-color: var(--primary-color); 
-            color: white; 
-            border: none; 
-            padding: 14px; 
-            border-radius: 6px; 
-            font-size: 15px; 
-            font-weight: bold; 
-            width: 100%; 
-            cursor: pointer; 
-            display: block;
-            text-align: center;
-        }
-        .add-btn { background-color: #475569; margin-top: 4px; padding: 10px; font-size: 13px; margin-bottom: 10px; width: 100%; color:white; border:none; border-radius:6px; cursor:pointer;}
-        .del-btn { 
-            background-color: #DC2626; 
-            padding: 6px 12px; 
-            width: 100%; 
-            font-size: 12px; 
-            margin-top: 8px;
-            color: white; border: none; border-radius: 4px; cursor: pointer;
-        }
+        .main-btn { background-color: var(--success-color); color: white; border: none; padding: 14px; border-radius: 6px; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; display: block; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h3>1. Общая информация о выезде</h3>
-        <label>Бригадир:</label>
-        <select id="brigadir">
-            <option value="Эмир">Эмир</option>
-            <option value="Курбан">Курбан</option>
-            <option value="Агаев Курбангельды">Агаев Курбангельды</option>
-            <option value="Кашамов Атамурад">Кашамов Атамурад</option>
-        </select>
+    <form id="reportForm">
+        <div class="card">
+            <h3>1. Информация о выезде</h3>
+            <label>Бригадир:</label>
+            <select id="brigadir">
+                <option value="Эмир">Эмир</option>
+                <option value="Курбан">Курбан</option>
+                <option value="Агаев Курбангельды">Агаев Курбангельды</option>
+                <option value="Кашамов Атамурад">Кашамов Атамурад</option>
+            </select>
 
-        <label>Название бригады:</label>
-        <input type="text" id="brigada" placeholder="Введите название бригады">
+            <label>Название бригады:</label>
+            <input type="text" id="brigada" placeholder="Например: Эмир">
 
-        <label>Объект / Адрес выезда:</label>
-        <select id="object">
-            <option value="110кВ ВЛ &quot;Йигит&quot;">110кВ ВЛ "Йигит"</option>
-            <option value="35кВ Вл &quot;Йигит&quot;">35кВ Вл "Йигит"</option>
-            <option value="Гоктепе &quot;Беглер Йол&quot;">Гоктепе "Беглер Йол"</option>
-        </select>
+            <label>Объект / Адрес выезда:</label>
+            <select id="object">
+                <option value="110кВ ВЛ &quot;Йигит&quot;">110кВ ВЛ "Йигит"</option>
+                <option value="35кВ Вл &quot;Йигит&quot;">35кВ Вл "Йигит"</option>
+                <option value="Гоктепе &quot;Беглер Йол&quot;">Гоктепе "Беглер Йол"</option>
+            </select>
 
-        <label>Описание выполненных работ:</label>
-        <textarea id="description" rows="3" placeholder="Опишите работу..."></textarea>
-        
-        <label>Статус объекта:</label>
-        <select id="status">
-            <option value="В процессе">В процессе</option>
-            <option value="Завершено">Завершено</option>
-        </select>
-        
-        <label>Комментарий:</label>
-        <input type="text" id="comment" placeholder="Примечания">
-    </div>
-
-    <div class="card">
-        <h3>2. Персонал и учёт времени</h3>
-        <div id="workers-container">
-            <!-- Строки создаются скриптом -->
+            <label>Описание выполненных работ:</label>
+            <textarea id="description" rows="2" placeholder="Что сделали..."></textarea>
+            
+            <label>Статус объекта:</label>
+            <select id="status">
+                <option value="В процессе">В процессе</option>
+                <option value="Завершено">Завершено</option>
+            </select>
+            
+            <label>Комментарий / Проблемы:</label>
+            <input type="text" id="comment" placeholder="Если есть проблемы">
         </div>
-        <button class="add-btn" type="button" onclick="addWorkerRow()">+ Добавить сотрудника</button>
-    </div>
 
-    <div class="card">
-        <h3>3. Расход материалов</h3>
-        <div id="materials-container">
-            <!-- Строки материалов создаются кнопкой -->
-        </div>
-        <button class="add-btn" type="button" onclick="addMaterialRow()">+ Списать material</button>
-    </div>
-
-    <button class="main-btn" style="background-color: var(--success-color); font-size: 17px; margin-top: 10px;" type="button" onclick="submitReport()">🚀 ОТПРАВИТЬ РАПОРТ</button>
-
-    <script>
-        // База данных имен для независимого отображения
-        const workerOptions = `
-            <option value="Агамырадов Агамырат">Агамырадов Агамырат (Пом. маляра)</option>
-            <option value="Агамырадов Сердармырат">Агамырадов Сердармырат (Пом. маляра)</option>
-            <option value="Аннадурдыев Бакы">Аннадурдыев Бакы (Электромонтер)</option>
-            <option value="Аннаев Ысмайыл">Аннаев Ысмайыл (Электромонтер)</option>
-            <option value="Аразмедов Аразмат">Аразмедов Аразмат (Электромонтер)</option>
-            <option value="Арджиков Бегенч">Арджиков Бегенч (Пом. маляра)</option>
-            <option value="Атаев Сохбет">Атаев Сохбет (Мастер электрик)</option>
-            <option value="Атаев Чарымырад">Атаев Чарымырад (Электромонтер)</option>
-            <option value="Черкезов Мейлис">Черкезов Мейлис (Электромонтер)</option>
-        `;
-
-        const materialOptions = `
-            <option value="Траверс Б-4">Траверс Б-4 (шт)</option>
-            <option value="Кабель ВВГнг-LS 3x2.5">Кабель ВВГнг-LS 3x2.5 (м)</option>
-            <option value="Гофротруба ПВХ d20">Гофротруба ПВХ d20 (м)</option>
-        `;
-
-        function addWorkerRow() {
-            const container = document.getElementById('workers-container');
-            const block = document.createElement('div');
-            block.className = 'worker-block';
-            block.innerHTML = `
-                <label>Сотрудник:</label>
-                <select class="worker-select">${workerOptions}</select>
-                <div class="time-row">
-                    <div class="time-field">
-                        <label>Начало:</label>
-                        <input type="time" class="time-start" value="08:00">
-                    </div>
-                    <div class="time-field">
-                        <label>Конец:</label>
-                        <input type="time" class="time-end" value="18:00">
+        <div class="card">
+            <h3>2. Персонал бригады (Заполните нужные строки)</h3>
+            <div id="workers-list">
+                <!-- Сразу генерируем 5 жестких строк для сотрудников, никаких скрытых кнопок -->
+                <div class="worker-row">
+                    <select class="w-name">
+                        <option value="">-- Выберите сотрудника (или оставьте пустым) --</option>
+                        <option value="Агамырадов Агамырат">Агамырадов Агамырат (Пом. маляра)</option>
+                        <option value="Агамырадов Сердармырат">Агамырадов Сердармырат (Пом. маляра)</option>
+                        <option value="Аннадурдыев Бакы">Аннадурдыев Бакы (Электромонтер)</option>
+                        <option value="Аннаев Ысмайыл">Аннаев Ысмайыл (Электромонтер)</option>
+                        <option value="Аразмедов Аразмат">Аразмедов Аразмат (Электромонтер)</option>
+                        <option value="Арджиков Бегенч">Арджиков Бегенч (Пом. маляра)</option>
+                        <option value="Атаев Сохбет">Атаев Сохбет (Мастер электрик)</option>
+                        <option value="Атаев Чарымырад">Атаев Чарымырад (Электромонтер)</option>
+                        <option value="Черкезов Мейлис">Черкезов Мейлис (Электромонтер)</option>
+                    </select>
+                    <div class="time-container">
+                        <div class="time-box"><label>Начало:</label><input type="time" class="w-start" value="08:00"></div>
+                        <div class="time-box"><label>Конец:</label><input type="time" class="w-end" value="18:00"></div>
                     </div>
                 </div>
-                <button class="del-btn" type="button" onclick="this.parentElement.remove()">✕ Удалить сотрудника</button>
-            `;
-            container.appendChild(block);
-        }
 
-        function addMaterialRow() {
-            const container = document.getElementById('materials-container');
-            const row = document.createElement('div');
-            row.className = 'mat-row';
-            row.innerHTML = `
-                <select class="mat-name">${materialOptions}</select>
-                <input type="number" class="mat-qty" placeholder="Кол-во" required>
-                <button style="background-color:#DC2626; color:white; border:none; padding:8px; border-radius:4px; margin-left:5px; cursor:pointer;" type="button" onclick="this.parentElement.remove()">✕</button>
-            `;
-            container.appendChild(row);
-        }
+                <div class="worker-row">
+                    <select class="w-name">
+                        <option value="">-- Выберите сотрудника (или оставьте пустым) --</option>
+                        <option value="Агамырадов Агамырат">Агамырадов Агамырат</option>
+                        <option value="Агамырадов Сердармырат">Агамырадов Сердармырат</option>
+                        <option value="Аннадурдыев Бакы">Аннадурдыев Бакы</option>
+                        <option value="Аннаев Ысмайыл">Аннаев Ысмайыл</option>
+                        <option value="Аразмедов Аразмат">Аразмедов Аразмат</option>
+                        <option value="Арджиков Бегенч">Арджиков Бегенч</option>
+                        <option value="Атаев Сохбет">Атаев Сохбет</option>
+                        <option value="Атаев Чарымырад">Атаев Чарымырад</option>
+                        <option value="Черкезов Мейлис">Черкезов Мейлис</option>
+                    </select>
+                    <div class="time-container">
+                        <div class="time-box"><label>Начало:</label><input type="time" class="w-start" value="08:00"></div>
+                        <div class="time-box"><label>Конец:</label><input type="time" class="w-end" value="18:00"></div>
+                    </div>
+                </div>
 
-        // Авто-создание первого рабочего
-        addWorkerRow();
+                <div class="worker-row">
+                    <select class="w-name">
+                        <option value="">-- Выберите сотрудника (или оставьте пустым) --</option>
+                        <option value="Агамырадов Агамырат">Агамырадов Агамырат</option>
+                        <option value="Агамырадов Сердармырат">Агамырадов Сердармырат</option>
+                        <option value="Аннадурдыев Бакы">Аннадурдыев Бакы</option>
+                        <option value="Аннаев Ысмайыл">Аннаев Ысмайыл</option>
+                        <option value="Аразмедов Аразмат">Аразмедов Аразмат</option>
+                        <option value="Арджиков Бегенч">Арджиков Бегенч</option>
+                        <option value="Атаев Сохбет">Атаев Сохбет</option>
+                        <option value="Атаев Чарымырад">Атаев Чарымырад</option>
+                        <option value="Черкезов Мейлис">Черкезов Мейлис</option>
+                    </select>
+                    <div class="time-container">
+                        <div class="time-box"><label>Начало:</label><input type="time" class="w-start" value="08:00"></div>
+                        <div class="time-box"><label>Конец:</label><input type="time" class="w-end" value="18:00"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        function calculateHours(startStr, endStr) {
-            const [sH, sM] = startStr.split(':').map(Number);
-            const [eH, eM] = endStr.split(':').map(Number);
-            let diffMins = (eH * 60 + eM) - (sH * 60 + sM);
-            if (diffMins < 0) diffMins += 24 * 60; 
-            let totalHours = diffMins / 60;
-            
-            // Ваше правило обеда по времени окончания смены >= 13:00
-            if (eH >= 13) {
-                totalHours = totalHours - 1;
-            }
-            return totalHours < 0 ? 0 : totalHours;
-        }
+        <div class="card">
+            <h3>3. Материалы (Заполните нужные строки)</h3>
+            <div id="mats-list">
+                <div class="mat-row">
+                    <select class="m-name">
+                        <option value="">-- Выберите материал --</option>
+                        <option value="Траверс Б-4">Траверс Б-4 (шт)</option>
+                        <option value="Кабель ВВГнг-LS 3x2.5">Кабель ВВГнг-LS 3x2.5 (м)</option>
+                        <option value="Гофротруба ПВХ d20">Гофротруба ПВХ d20 (м)</option>
+                    </select>
+                    <input type="number" class="m-qty" placeholder="Кол-во">
+                </div>
+                <div class="mat-row">
+                    <select class="m-name">
+                        <option value="">-- Выберите материал --</option>
+                        <option value="Траверс Б-4">Траверс Б-4 (шт)</option>
+                        <option value="Кабель ВВГнг-LS 3x2.5">Кабель ВВГнг-LS 3x2.5 (м)</option>
+                        <option value="Гофротруба ПВХ d20">Гофротруба ПВХ d20 (м)</option>
+                    </select>
+                    <input type="number" class="m-qty" placeholder="Кол-во">
+                </div>
+            </div>
+        </div>
 
-        function submitReport() {
+        <button type="button" class="main-btn" onclick="sendReport()">🚀 ОТПРАВИТЬ РАПОРТ</button>
+    </form>
+
+    <script>
+        function sendReport() {
             const report = {
                 brigadir: document.getElementById('brigadir').value,
                 brigada: document.getElementById('brigada').value || "Основная",
@@ -244,6 +160,4 @@
                 materials: []
             };
 
-            document.querySelectorAll('.worker-block').forEach(block => {
-                const name = block.querySelector('.worker-select').value;
-                const start = block.querySelector('.time-start').value;
+            // Собираем работников
