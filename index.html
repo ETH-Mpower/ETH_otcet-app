@@ -20,8 +20,6 @@
             color: var(--text-color); 
             margin: 0; 
             padding: 12px; 
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
         }
         .card { 
             background: var(--card-bg); 
@@ -37,7 +35,6 @@
             font-size: 16px; 
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             margin-bottom: 12px;
         }
         label { 
@@ -65,6 +62,7 @@
             padding: 14px; 
             border-radius: 6px;
             margin-bottom: 12px; 
+            position: relative;
         }
         .time-row { 
             display: flex; 
@@ -78,6 +76,11 @@
             display: flex;
             gap: 10px;
             margin-bottom: 8px;
+            background: #F8FAFC;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            align-items: center;
         }
         .mat-row select { flex: 2; margin-bottom: 0; }
         .mat-row input { flex: 1; margin-bottom: 0; text-align: center; }
@@ -93,33 +96,17 @@
             width: 100%; 
             cursor: pointer; 
         }
-        button:active { background-color: #153358; }
-        button.add-btn { background-color: #475569; margin-top: 4px; padding: 10px; font-size: 13px; }
+        button.add-btn { background-color: #475569; margin-top: 4px; padding: 10px; font-size: 13px; margin-bottom: 10px; }
         button.del-btn { 
             background-color: #DC2626; 
             padding: 6px 12px; 
-            width: auto; 
+            width: 100%; 
             font-size: 12px; 
             margin-top: 8px;
-            float: right;
-        }
-        .clearfix::after { content: ""; clear: both; display: table; }
-        .offline-badge { 
-            background-color: #D97706; 
-            color: white; 
-            text-align: center; 
-            padding: 10px; 
-            border-radius: 6px; 
-            font-weight: bold; 
-            font-size: 13px; 
-            margin-bottom: 12px; 
-            display: none; 
         }
     </style>
 </head>
 <body>
-
-    <div id="offline-status" class="offline-badge">⚠️ РЕЖИМ ПУСТЫНИ (ОФЛАЙН): Данные защищены в памяти устройства</div>
 
     <div class="card">
         <h3>1. Общая информация о выезде</h3>
@@ -142,93 +129,79 @@
         </select>
 
         <label>Описание выполненных работ:</label>
-        <textarea id="description" rows="3" placeholder="Опишите, что конкретно сделано..."></textarea>
+        <textarea id="description" rows="3" placeholder="Опишите работу..."></textarea>
         
         <label>Статус объекта:</label>
         <select id="status">
             <option value="В процессе">В процессе</option>
             <option value="Завершено">Завершено</option>
-            <option value="Приостановлено">Приостановлено</option>
         </select>
         
-        <label>Комментарий / Проблемы:</label>
-        <input type="text" id="comment" placeholder="Жалобы или примечания (если есть)">
+        <label>Комментарий:</label>
+        <input type="text" id="comment" placeholder="Примечания">
     </div>
 
     <div class="card">
         <h3>2. Персонал и учёт времени</h3>
         <div id="workers-container">
-            <div class="worker-block clearfix">
-                <label>Сотрудник:</label>
-                <select class="worker-select">
-                    <option value="Агамырадов Агамырат">Агамырадов Агамырат (Пом. маляра)</option>
-                    <option value="Агамырадов Сердармырат">Агамырадов Сердармырат (Пом. маляра)</option>
-                    <option value="Аннадурдыев Бакы">Аннадурдыев Бакы (Электромонтер)</option>
-                    <option value="Аннаев Ысмайыл">Аннаев Ысмайыл (Электромонтер)</option>
-                    <option value="Аразмедов Аразмат">Аразмедов Аразмат (Электромонтер)</option>
-                    <option value="Арджиков Бегенч">Арджиков Бегенч (Пом. маляра)</option>
-                    <option value="Атаев Сохбет">Аtaev Сохбет (Мастер электрик)</option>
-                    <option value="Атаев Чарымырад">Атаев Чарымырад (Электромонтер)</option>
-                    <option value="Аширов Мурад">Аширов Мурад (Водитель OPEL)</option>
-                    <option value="Аширов Ягшимурад">Аширов Ягшимурад (Электромонтер)</option>
-                    <option value="Байрамов Баллы">Байрамов Баллы (Электромонтер)</option>
-                    <option value="Байханов Сердар">Байханов Сердар (Вод-ль манипулятора)</option>
-                    <option value="Баллыев Шамухамет">Баллыев Шамухамет (Пом. сварщика)</option>
-                    <option value="Вергун Антон">Вергун Антон (Электромонтер)</option>
-                    <option value="Черкезов Дортгулы">Черкезов Дортгулы (Электромонтер)</option>
-                    <option value="Черкезов Мейлис">Черкезов Мейлис (Электромонтер)</option>
-                </select>
-
-                <div class="time-row">
-                    <div class="time-field">
-                        <label>Начало работы:</label>
-                        <input type="time" class="time-start" value="08:00">
-                    </div>
-                    <div class="time-field">
-                        <label>Конец работы:</label>
-                        <input type="time" class="time-end" value="18:00">
-                    </div>
-                </div>
-            </div>
+            <!-- Первая строка создается автоматически -->
         </div>
-        <button class="add-btn" onclick="addWorkerRow()">+ Добавить сотрудника</button>
+        <button class="add-btn" type="button" onclick="addWorkerRow()">+ Добавить сотрудника</button>
     </div>
 
     <div class="card">
         <h3>3. Расход материалов</h3>
-        <div id="materials-container"></div>
-        <button class="add-btn" onclick="addMaterialRow()">+ Списать материал</button>
+        <div id="materials-container">
+            <!-- Строки материалов добавляются кнопкой -->
+        </div>
+        <button class="add-btn" type="button" onclick="addMaterialRow()">+ Списать материал</button>
     </div>
 
-    <button style="background-color: var(--success-color); font-size: 17px; margin-top: 10px;" onclick="submitReport()">🚀 ОТПРАВИТЬ РАПОРТ</button>
+    <button style="background-color: var(--success-color); font-size: 17px; margin-top: 10px;" type="button" onclick="submitReport()">🚀 ОТПРАВИТЬ РАПОРТ</button>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function updateOnlineStatus() {
-            document.getElementById('offline-status').style.display = navigator.onLine ? 'none' : 'block';
-        }
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
-        updateOnlineStatus();
+        // Списки сотрудников и материалов в виде текстовых шаблонов во избежание ошибок DOM
+        const workerOptions = `
+            <option value="Агамырадов Агамырат">Агамырадов Агамырат (Пом. маляра)</option>
+            <option value="Агамырадов Сердармырат">Агамырадов Сердармырат (Пом. маляра)</option>
+            <option value="Аннадурдыев Бакы">Аннадурдыев Бакы (Электромонтер)</option>
+            <option value="Аннаев Ысмайыл">Аннаев Ысмайыл (Электромонтер)</option>
+            <option value="Аразмедов Аразмат">Аразмедов Аразмат (Электромонтер)</option>
+            <option value="Арджиков Бегенч">Арджиков Бегенч (Пом. маляра)</option>
+            <option value="Атаев Сохбет">Атаев Сохбет (Мастер электрик)</option>
+            <option value="Атаев Чарымырад">Атаев Чарымырад (Электромонтер)</option>
+            <option value="Черкезов Мейлис">Черкезов Мейлис (Электромонтер)</option>
+        `;
+
+        const materialOptions = `
+            <option value="Траверс Б-4">Траверс Б-4 (шт)</option>
+            <option value="Кабель ВВГнг-LS 3x2.5">Кабель ВВГнг-LS 3x2.5 (м)</option>
+            <option value="Гофротруба ПВХ d20">Гофротруба ПВХ d20 (м)</option>
+        `;
 
         function addWorkerRow() {
             const container = document.getElementById('workers-container');
-            const firstBlock = container.querySelector('.worker-block');
-            const newBlock = firstBlock.cloneNode(true);
-            
-            const delBtn = newBlock.querySelector('.del-btn');
-            if (delBtn) delBtn.remove();
-            
-            const btn = document.createElement('button');
-            btn.className = 'del-btn';
-            btn.innerText = '✕ Удалить';
-            btn.type = 'button';
-            btn.onclick = function() { newBlock.remove(); };
-            newBlock.appendChild(btn);
-            
-            container.appendChild(newBlock);
+            const block = document.createElement('div');
+            block.className = 'worker-block';
+            block.innerHTML = `
+                <label>Сотрудник:</label>
+                <select class="worker-select">${workerOptions}</select>
+                <div class="time-row">
+                    <div class="time-field">
+                        <label>Начало:</label>
+                        <input type="time" class="time-start" value="08:00">
+                    </div>
+                    <div class="time-field">
+                        <label>Конец:</label>
+                        <input type="time" class="time-end" value="18:00">
+                    </div>
+                </div>
+                <button class="del-btn" type="button" onclick="this.parentElement.remove()">✕ Удалить сотрудника</button>
+            `;
+            container.appendChild(block);
         }
 
         function addMaterialRow() {
@@ -236,11 +209,44 @@
             const row = document.createElement('div');
             row.className = 'mat-row';
             row.innerHTML = `
-                <select class="mat-name">
-                    <option value="Траверс Б-4">Траверс Б-4 (шт)</option>
-                    <option value="Кабель ВВГнг-LS 3x2.5">Кабель ВВГнг-LS 3x2.5 (м)</option>
-                    <option value="Гофротруба ПВХ d20">Гофротруба ПВХ d20 (м)</option>
-                    <option value="Цементно-песчаная смесь М150">Цементно-песчаная смесь М150 (кг)</option>
-                </select>
+                <select class="mat-name">${materialOptions}</select>
                 <input type="number" class="mat-qty" placeholder="Кол-во" required>
+                <button style="background-color:#DC2626; padding:8px; width:auto; margin-left:5px;" type="button" onclick="this.parentElement.remove()">✕</button>
             `;
+            container.appendChild(row);
+        }
+
+        // Автоматически создаем первого сотрудника при загрузке формы
+        addWorkerRow();
+
+        function calculateHours(startStr, endStr) {
+            const [sH, sM] = startStr.split(':').map(Number);
+            const [eH, eM] = endStr.split(':').map(Number);
+            let diffMins = (eH * 60 + eM) - (sH * 60 + sM);
+            if (diffMins < 0) diffMins += 24 * 60; 
+            let totalHours = diffMins / 60;
+            
+            // Вычет 1 часа обеда, если время окончания смены 13:00 или позже
+            if (eH >= 13) {
+                totalHours = totalHours - 1;
+            }
+            return totalHours < 0 ? 0 : totalHours;
+        }
+
+        function submitReport() {
+            const report = {
+                brigadir: document.getElementById('brigadir').value,
+                brigada: document.getElementById('brigada').value || "Основная",
+                object: document.getElementById('object').value,
+                description: document.getElementById('description').value,
+                status: document.getElementById('status').value,
+                comment: document.getElementById('comment').value || "Нет",
+                workers: [],
+                materials: []
+            };
+
+            document.querySelectorAll('.worker-block').forEach(block => {
+                const name = block.querySelector('.worker-select').value;
+                const start = block.querySelector('.time-start').value;
+                const end = block.querySelector('.time-end').value;
+                const hours = calculateHours(start, end);
