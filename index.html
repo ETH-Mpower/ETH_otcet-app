@@ -47,16 +47,6 @@
             font-size: 13px; 
             color: #4A5568; 
         }
-        .sub-label {
-            font-size: 12px;
-            color: #718096;
-            font-weight: 500;
-            margin-bottom: 4px;
-            background: #E2E8F0;
-            padding: 2px 6px;
-            border-radius: 4px;
-            display: inline-block;
-        }
         select, input, textarea { 
             width: 100%; 
             padding: 12px; 
@@ -76,15 +66,10 @@
             border-radius: 6px;
             margin-bottom: 12px; 
         }
-        .time-group {
-            background: #EDF2F7;
-            padding: 8px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-        }
         .time-row { 
             display: flex; 
             gap: 10px; 
+            margin-top: 8px;
         }
         .time-field { flex: 1; }
         .time-field input { margin-bottom: 0; padding: 8px; }
@@ -137,7 +122,7 @@
     <div id="offline-status" class="offline-badge">⚠️ РЕЖИМ ПУСТЫНИ (ОФЛАЙН): Данные защищены в памяти устройства</div>
 
     <div class="card">
-        <h3>1. Выездной рапорт</h3>
+        <h3>1. Общая информация о выезде</h3>
         <label>Бригадир:</label>
         <select id="brigadir">
             <option value="Эмир">Эмир</option>
@@ -171,7 +156,7 @@
     </div>
 
     <div class="card">
-        <h3>2. Персонал и раздельный учёт времени</h3>
+        <h3>2. Персонал и учёт времени</h3>
         <div id="workers-container">
             <div class="worker-block clearfix">
                 <label>Сотрудник:</label>
@@ -194,33 +179,14 @@
                     <option value="Черкезов Мейлис">Черкезов Мейлис (Электромонтер)</option>
                 </select>
 
-                <!-- Время на ВЛ / Выезде -->
-                <div class="time-group">
-                    <div class="sub-label">1. РАБОТА НА ВЛ (В ПУСТЫНЕ)</div>
-                    <div class="time-row">
-                        <div class="time-field">
-                            <label>Начало:</label>
-                            <input type="time" class="time-vl-start" value="08:00">
-                        </div>
-                        <div class="time-field">
-                            <label>Конец:</label>
-                            <input type="time" class="time-vl-end" value="14:00">
-                        </div>
+                <div class="time-row">
+                    <div class="time-field">
+                        <label>Начало работы:</label>
+                        <input type="time" class="time-start" value="08:00">
                     </div>
-                </div>
-
-                <!-- Время на Базе -->
-                <div class="time-group">
-                    <div class="sub-label">2. РАБОТА НА БАЗЕ (ПОСЛЕ 14:00)</div>
-                    <div class="time-row">
-                        <div class="time-field">
-                            <label>Начало:</label>
-                            <input type="time" class="time-base-start" value="14:00">
-                        </div>
-                        <div class="time-field">
-                            <label>Конец:</label>
-                            <input type="time" class="time-base-end" value="18:00">
-                        </div>
+                    <div class="time-field">
+                        <label>Конец работы:</label>
+                        <input type="time" class="time-end" value="18:00">
                     </div>
                 </div>
             </div>
@@ -250,3 +216,31 @@
         function addWorkerRow() {
             const container = document.getElementById('workers-container');
             const firstBlock = container.querySelector('.worker-block');
+            const newBlock = firstBlock.cloneNode(true);
+            
+            if (!newBlock.querySelector('.del-btn')) {
+                const delBtn = document.createElement('button');
+                delBtn.className = 'del-btn';
+                delBtn.innerText = '✕ Удалить';
+                delBtn.onclick = function() { newBlock.remove(); };
+                newBlock.appendChild(delBtn);
+            }
+            container.appendChild(newBlock);
+        }
+
+        function addMaterialRow() {
+            const container = document.getElementById('materials-container');
+            const row = document.createElement('div');
+            row.className = 'mat-row';
+            row.innerHTML = `
+                <select class="mat-name">
+                    <option value="Траверс Б-4">Траверс Б-4 (шт)</option>
+                    <option value="Кабель ВВГнг-LS 3x2.5">Кабель ВВГнг-LS 3x2.5 (м)</option>
+                    <option value="Гофротруба ПВХ d20">Гофротруба ПВХ d20 (м)</option>
+                    <option value="Цементно-песчаная смесь М150">Цементно-песчаная смесь М150 (кг)</option>
+                </select>
+                <input type="number" class="mat-qty" placeholder="Кол-во" required>
+            `;
+            container.appendChild(row);
+        }
+
